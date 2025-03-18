@@ -1,0 +1,12 @@
+apiVersion: websites.example.com/v1alpha1
+kind: StaticWebsite
+metadata:
+  labels:
+    app.kubernetes.io/name: staticwebsite
+    app.kubernetes.io/instance: staticwebsite-sample
+    app.kubernetes.io/part-of: static-website-operator
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: static-website-operator
+  name: staticwebsite-sample
+spec:
+  # TODO(user): Add fields here

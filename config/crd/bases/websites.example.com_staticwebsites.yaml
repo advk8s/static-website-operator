@@ -1,0 +1,118 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: staticwebsites.websites.example.com
+spec:
+  group: websites.example.com
+  names:
+    kind: StaticWebsite
+    listKind: StaticWebsiteList
+    plural: staticwebsites
+    singular: staticwebsite
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.phase
+      name: Phase
+      type: string
+    - jsonPath: .spec.replicas
+      name: Replicas
+      type: integer
+    - jsonPath: .status.availableReplicas
+      name: Available
+      type: integer
+    - jsonPath: .status.url
+      name: URL
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: StaticWebsite is the Schema for the staticwebsites API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: StaticWebsiteSpec defines the desired state of StaticWebsite
+            properties:
+              image:
+                description: Image is the container image for the static website
+                type: string
+              replicas:
+                default: 1
+                description: Replicas is the number of replicas to deploy
+                format: int32
+                minimum: 1
+                type: integer
+              resources:
+                description: Resources defines the resource requirements for the container
+                properties:
+                  limits:
+                    additionalProperties:
+                      type: string
+                    description: Limits describes the maximum amount of compute resources
+                      allowed.
+                    type: object
+                  requests:
+                    additionalProperties:
+                      type: string
+                    description: Requests describes the minimum amount of compute
+                      resources required.
+                    type: object
+                type: object
+              storage:
+                description: Storage defines the storage configuration for the website
+                  content
+                properties:
+                  mountPath:
+                    default: /usr/share/nginx/html
+                    description: MountPath is where the volume will be mounted in
+                      the container
+                    type: string
+                  size:
+                    description: Size is the size of the storage
+                    type: string
+                  storageClassName:
+                    description: StorageClassName is the storage class to use
+                    type: string
+                required:
+                - size
+                type: object
+            required:
+            - image
+            type: object
+          status:
+            description: StaticWebsiteStatus defines the observed state of StaticWebsite
+            properties:
+              availableReplicas:
+                description: AvailableReplicas is the number of available replicas
+                format: int32
+                type: integer
+              phase:
+                description: Phase is the current phase of the StaticWebsite
+                type: string
+              url:
+                description: URL is the URL to access the website
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
